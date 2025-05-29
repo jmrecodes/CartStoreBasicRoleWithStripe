@@ -21,6 +21,61 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
+## Setup Instructions
+
+To get this project up and running locally, follow these steps:
+
+1.  **Clone the repository** (if you haven't already):
+    ```bash
+    git clone <your-repository-url>
+    cd <repository-directory>
+    ```
+
+2.  **Install PHP dependencies using Composer:**
+    ```bash
+    composer install
+    ```
+
+3.  **Copy the example environment file and generate an application key:**
+    If you have a `.env.example` file, copy it to `.env`:
+    ```bash
+    cp .env.example .env
+    ```
+    Then, generate the application key:
+    ```bash
+    php artisan key:generate
+    ```
+    If you don't have a `.env.example` file, create a `.env` file and add the necessary configurations.
+
+4.  **Configure your environment variables in the `.env` file:**
+    Open the `.env` file and make sure the following variables are set with your Stripe credentials and desired currency:
+    ```dotenv
+    CASHIER_CURRENCY=USD # Or your preferred currency
+    STRIPE_KEY=your_stripe_publishable_key
+    STRIPE_SECRET=your_stripe_secret_key
+
+    # Add other necessary environment variables like database connection details
+    DB_CONNECTION=sqlite
+    or
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=your_database_name
+    DB_USERNAME=your_database_user
+    DB_PASSWORD=your_database_password
+    ```
+
+5.  **Run database migrations:**
+    ```bash
+    php artisan migrate --seed or php artisan migrate:fresh --seed
+    ```
+
+6.  **Serve the application:**
+    ```bash
+    php artisan serve
+    ```
+    The application will usually be available at `http://127.0.0.1:8000`.
+
 ## Learning Laravel
 
 Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.

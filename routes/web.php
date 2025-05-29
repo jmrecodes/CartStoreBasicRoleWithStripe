@@ -11,6 +11,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\PurchaseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,14 +34,7 @@ Route::post('/login', LoginController::class)->middleware('guest');
 
 Route::post('/logout', LogoutController::class)->name('logout')->middleware('auth');
 
-// Ordinary User Routes
-Route::middleware(['auth', 'isOrdinary'])->group(function () {
-    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-    Route::post('/cart/add', [CartController::class, 'store'])->name('cart.store');
-    Route::delete('/cart/remove', [CartController::class, 'destroy'])->name('cart.remove');
-});
-
-// Auth Routes
+// Auth Profile Routes
 Route::middleware(['auth'])
     ->prefix('profile')->name('profile.')->group(function () {
     Route::get('/', [UserProfileController::class, 'show'])->name('show');
@@ -48,6 +42,15 @@ Route::middleware(['auth'])
     Route::put('/', [UserProfileController::class, 'update'])->name('update');
     Route::get('/change-password', [UserProfileController::class, 'showChangePasswordForm'])->name('change-password.form');
     Route::post('/change-password', [UserProfileController::class, 'changePassword'])->name('change-password');
+});
+
+// Ordinary User Routes
+Route::middleware(['auth', 'isOrdinary'])->group(function () {
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/add', [CartController::class, 'store'])->name('cart.store');
+    Route::delete('/cart/remove', [CartController::class, 'destroy'])->name('cart.remove');
+
+    Route::post('/purchase', PurchaseController::class)->name('purchase');
 });
 
 // Admin Routes

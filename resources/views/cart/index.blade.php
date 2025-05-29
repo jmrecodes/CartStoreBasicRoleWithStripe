@@ -73,15 +73,37 @@
             </div>
         </div>
 
-        <div class="row mt-4 mb-5 align-items-center">
-            <div class="col-md-6 mb-2 mb-md-0">
-                <a href="{{ route('home') }}" class="btn btn-outline-secondary btn-lg w-100 w-md-auto"> Continue Shopping</a>
-            </div>
-            <div class="col-md-6 text-md-end">
-                <button type="button" class="btn btn-primary btn-lg w-100 w-md-auto">Proceed to Checkout </button>
-            </div>
-        </div>
+        <form action="{{ route('purchase') }}" method="POST">
+            @csrf
+            <input type="hidden" name="total" value="{{ number_format($cartTotal, 2) }}">
 
+
+            <div class="row mt-4 mb-5 justify-content-center">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">Cardholder Name</label>
+                                <input id="card-holder-name" type="text" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Card Details</label>
+                                <div id="card-element" class="form-control p-3"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4 mb-5 align-items-center">
+                <div class="col-md-6 mb-2 mb-md-0">
+                    <a href="{{ route('home') }}" class="btn btn-outline-secondary btn-lg w-100 w-md-auto"> Continue Shopping</a>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <button type="button" id="card-button" class="btn btn-primary btn-lg w-100 w-md-auto">Proceed to Checkout</button>
+                </div>
+            </div>
+        </form>
     @else
         <div class="text-center py-5">
             <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-cart-x mb-3 text-muted" viewBox="0 0 16 16">
@@ -95,3 +117,59 @@
     @endif
 </div>
 @endsection
+
+<script src="https://js.stripe.com/v3/"></script>
+
+<script>
+    // On page load, create a Stripe client
+    document.addEventListener('DOMContentLoaded', function() {
+        const stripe = Stripe('{{ env('STRIPE_KEY') }}');
+
+        const elements = stripe.elements();
+        const cardElement = elements.create('card');
+
+        cardElement.mount('#card-element');
+
+        // when mount is complete, add an event listener to the card element
+        cardElement.addEventListener('change', (e) => {
+            // if the card number input was changed, check if the card number is valid
+            if (e.elementType === 'card') {
+                if (e.complete) {
+                    cardButton.classList.remove('disabled');
+                } else {
+                    cardButton.classList.add('disabled');
+                }
+            }
+        });
+
+        const cardHolderName = document.getElementById('card-holder-name');
+        const cardButton = document.getElementById('card-button');
+        const form = cardButton.closest('form'); // Get the form element
+
+        // verify the card details before proceeding to checkout
+        cardButton.addEventListener('click', async (e) => {
+            e.preventDefault(); // Prevent default form submission
+
+            const { paymentMethod, error } = await stripe.createPaymentMethod(
+                'card', cardElement, {
+                    billing_details: { name: cardHolderName.value }
+                }
+            );
+
+            if (error) {
+                alert("Invalid card details: " + error.message); // Provide more specific error
+                cardButton.classList.add('disabled');
+            } else {
+                // Create a hidden input to store the paymentMethod.id
+                const hiddenInput = document.createElement('input');
+                hiddenInput.setAttribute('type', 'hidden');
+                hiddenInput.setAttribute('name', 'paymentMethodId');
+                hiddenInput.setAttribute('value', paymentMethod.id);
+                form.appendChild(hiddenInput);
+
+                // Submit the form
+                form.submit();
+            }
+        });
+    });
+</script>

@@ -11,6 +11,7 @@
     "require": {
         "php": "^8.2",
         "binafy/laravel-cart": "^1.2",
+        "laravel/cashier": "^15.6",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1"
     },
