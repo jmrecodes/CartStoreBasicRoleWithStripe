@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\ShowLoginFormController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,9 +20,7 @@ use App\Http\Controllers\UserProfileController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome'); // Placeholder, will be replaced by ProductController@index
-})->name('home');
+Route::get('/', [ProductController::class, 'index'])->name('home');
 
 // Registration Routes
 Route::get('/register', ShowRegistrationFormController::class)->name('register')->middleware('guest');
