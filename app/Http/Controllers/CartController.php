@@ -78,7 +78,7 @@ class CartController extends Controller
 
             if ($cartItem && $cartItem->itemable) {
                 $productToRemove = Product::findOrFail($cartItemId);
-                $cart->removeItem($cartItem->itemable);
+                $cart->removeItem($productToRemove);
                 return redirect()->route('cart.index')->with('success', __(':name removed from cart.', ['name' => $cartItem->itemable->name]));
             } else {
                 return redirect()->route('cart.index')->with('error', __('Cart item not found or product data missing.'));
