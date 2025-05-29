@@ -1,0 +1,32 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Project Development Guidelines
+
+## I. UI/UX Documentation Context
+
+- Your primary source for understanding the UI/UX design, aesthetic, brand, color palette, typography, layout, UI elements, and interaction patterns for this project is the documentation found within the `GenAI-UI-UX-Markdowns/` directory.
+- Always refer to these documents when generating UI/UX related code, making design decisions, or answering questions about the project's visual and interactive style.
+- Specifically, pay close attention to all files within:
+    - `GenAI-UI-UX-Markdowns/`
+    - (Including `README.md`, `01_aesthetic_brand.md`, `02_color_palette.md`, `03_typography.md`, `04_layout_whitespace/`, `05_ui_elements/`, etc.)
+- Only use this context (`GenAI-UI-UX-Markdowns/`) to generate the UI/UX design for the project.
+- Always adhere to the design principles and specifications outlined in the included `GenAI-UI-UX-Markdowns/` documentation.
+
+## II. Project Coding Standards and Default Style
+
+### General Instructions:
+- Prioritize semantic HTML and WCAG AA accessibility standards as described in the brief (found in the `GenAI-UI-UX-Markdowns/` documentation).
+- When generating CSS, use CSS variables for colors and spacing where applicable, following the brief's guidelines (found in the `GenAI-UI-UX-Markdowns/` documentation).
+- If specific CSS frameworks (Tailwind, Bootstrap) or JS frameworks (React) are requested for a particular task, use the patterns demonstrated in the brief's Section 7/07_implementation_tech (found in the `GenAI-UI-UX-Markdowns/` documentation). However, the default style below should be preferred unless explicitly overridden for a specific task.
+- Make sure to use the latest version of the libraries required and applicable to the project.
+- Provide the necessary setup and installation instructions whenever necessary for the project.
+
+### Default Technology Stack and Style:
+- Generate code using Blade Templates.
+- Utilize Blade Components for reusable UI elements.
+- Employ Bootstrap for styling and layout.
+- Use vanilla JavaScript for client-side interactions.
+- Ensure all generated code adheres to these choices unless a deviation is explicitly requested for a specific task.
