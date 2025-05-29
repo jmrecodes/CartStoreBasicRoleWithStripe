@@ -43,6 +43,11 @@ class LoginController extends Controller
         if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
             $request->session()->regenerate();
 
+            $user = Auth::user();
+            if ($user->isAdmin()) {
+                return redirect()->route('admin.users.index')->with('status', __('Welcome back, Admin!'));
+            }
+
             return redirect()->intended($this->redirectPath())->with('status', __('You have successfully logged in!'));
         }
 

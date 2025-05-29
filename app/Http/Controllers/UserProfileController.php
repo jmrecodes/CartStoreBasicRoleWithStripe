@@ -9,16 +9,6 @@ use Illuminate\View\View;
 class UserProfileController extends Controller
 {
     /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        // Middleware will be applied on the routes for this controller
-    }
-
-    /**
      * Show the user's profile.
      *
      * @return \Illuminate\View\View

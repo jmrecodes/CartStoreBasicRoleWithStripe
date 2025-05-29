@@ -9,6 +9,8 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,29 +25,35 @@ use App\Http\Controllers\CartController;
 
 Route::get('/', [ProductController::class, 'index'])->name('home');
 
-// Registration Routes
+// Auth Routes (Registration, Login, Logout)
 Route::get('/register', ShowRegistrationFormController::class)->name('register')->middleware('guest');
 Route::post('/register', RegisterController::class)->middleware('guest');
-
-// Login Routes
 Route::get('/login', ShowLoginFormController::class)->name('login')->middleware('guest');
 Route::post('/login', LoginController::class)->middleware('guest');
 
-// Logout Route
 Route::post('/logout', LogoutController::class)->name('logout')->middleware('auth');
 
-// Cart Routes
-Route::get('/cart', [CartController::class, 'index'])->name('cart.index')->middleware('auth');
-Route::post('/cart/add', [CartController::class, 'store'])->name('cart.store')->middleware('auth');
-Route::delete('/cart/remove', [CartController::class, 'destroy'])->name('cart.remove')->middleware('auth');
+// Ordinary User Routes
+Route::middleware(['auth', 'isOrdinary'])->group(function () {
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/add', [CartController::class, 'store'])->name('cart.store');
+    Route::delete('/cart/remove', [CartController::class, 'destroy'])->name('cart.remove');
+});
 
-// Placeholder routes for links in app.blade.php - to be implemented later
-Route::get('/profile', [UserProfileController::class, 'show'])->name('profile.show')->middleware('auth');
+// Auth Routes
+Route::middleware(['auth'])
+    ->prefix('profile')->name('profile.')->group(function () {
+    Route::get('/', [UserProfileController::class, 'show'])->name('show');
+    Route::get('/edit', [UserProfileController::class, 'edit'])->name('edit');
+    Route::put('/', [UserProfileController::class, 'update'])->name('update');
+    Route::get('/change-password', [UserProfileController::class, 'showChangePasswordForm'])->name('change-password.form');
+    Route::post('/change-password', [UserProfileController::class, 'changePassword'])->name('change-password');
+});
 
-// Routes for editing profile
-Route::get('/profile/edit', [UserProfileController::class, 'edit'])->name('profile.edit')->middleware('auth');
-Route::put('/profile', [UserProfileController::class, 'update'])->name('profile.update')->middleware('auth');
-
-// Routes for changing password
-Route::get('/profile/change-password', [UserProfileController::class, 'showChangePasswordForm'])->name('profile.change-password.form')->middleware('auth');
-Route::post('/profile/change-password', [UserProfileController::class, 'changePassword'])->name('profile.change-password')->middleware('auth');
+// Admin Routes
+Route::middleware(['auth', 'isAdmin'])
+    ->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('users', AdminUserController::class)->except(['show']);
+    Route::patch('/users/{user}/promote', [AdminUserController::class, 'promote'])->name('users.promote');
+    Route::resource('products', AdminProductController::class);
+});

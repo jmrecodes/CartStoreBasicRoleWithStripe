@@ -1,87 +1,96 @@
 @extends('layouts.app')
 
+@section('title', 'Your Shopping Cart')
+
 @section('content')
-<div class="container py-4">
-    <div class="row mb-4">
-        <div class="col">
-            <h1>{{ __('Your Shopping Cart') }}</h1>
-        </div>
+<div class="container mt-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Your Shopping Cart</h1>
     </div>
 
-    @if (session('status'))
-        <div class="alert alert-success" role="alert">
-            {{ session('status') }}
+    @if (session('success'))
+        <div class="alert alert-success mb-3" role="alert">
+            {{ session('success') }}
         </div>
     @endif
     @if (session('error'))
-        <div class="alert alert-danger" role="alert">
+        <div class="alert alert-danger mb-3" role="alert">
             {{ session('error') }}
         </div>
     @endif
 
     @if ($cart && $cart->items->isNotEmpty())
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <table class="table table-hover align-middle">
-                    <thead>
+        <div class="card">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
                         <tr>
-                            <th style="width: 10%;">{{ __('Image') }}</th>
-                            <th>{{ __('Product') }}</th>
-                            {{-- <th class="text-center" style="width: 10%;">{{ __('Quantity') }}</th> --}} {{-- Removed Quantity Header --}}
-                            <th class="text-end" style="width: 15%;">{{ __('Price') }}</th>
-                            <th class="text-end" style="width: 15%;">{{ __('Subtotal') }}</th>
-                            <th class="text-center" style="width: 10%;">{{ __('Actions') }}</th>
+                            <th scope="col" style="width: 10%; padding-left: var(--space-md);">Image</th>
+                            <th scope="col" style="width: 45%;">Product</th>
+                            <th scope="col" style="width: 15%;" class="text-end">Price</th>
+                            <th scope="col" style="width: 15%;" class="text-center pe-3">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($cart->items as $item)
-                            @if ($item->itemable) {{-- Check if product data is loaded --}}
+                            @if ($item->itemable)
                                 <tr>
-                                    <td>
-                                        <img src="{{ $item->itemable->image_url ?: 'https://placehold.co/100x75/EFEFEF/AAAAAA?text=No+Image' }}" 
-                                             alt="{{ $item->itemable->name }}" class="img-fluid rounded" style="max-height: 75px; object-fit: cover;">
+                                    <td style="padding-left: var(--space-md);">
+                                        <img src="{{ $item->itemable->image_url ?: 'https://placehold.co/100x100/EFEFEF/AAAAAA?text=No+Image' }}" 
+                                             alt="{{ $item->itemable->name }}" class="img-fluid rounded" style="max-height: 75px; width: 75px; object-fit: cover;">
                                     </td>
                                     <td>
-                                        <strong>{{ $item->itemable->name }}</strong><br>
-                                        <small class="text-muted">{{ Str::limit($item->itemable->description, 50) }}</small>
+                                        <strong>{{ $item->itemable->name }}</strong>
+                                        <p class="small text-muted mb-0">{{ Str::limit($item->itemable->description, 60) }}</p>
                                     </td>
-                                    {{-- <td class="text-center">{{ $item->quantity }}</td> --}} {{-- Removed Quantity Cell --}}
                                     <td class="text-end">${{ number_format($item->itemable->getPrice(), 2) }}</td>
-                                    <td class="text-end">${{ number_format($item->itemable->getPrice() * $item->quantity, 2) }}</td> {{-- Subtotal still uses quantity --}}
-                                    <td class="text-center">
+                                    <td class="text-center pe-3">
                                         <form action="{{ route('cart.remove') }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                             <input type="hidden" name="cart_item_id" value="{{ $item->id }}">
-                                            <button type="submit" class="btn btn-danger btn-sm">{{ __('Remove') }}</button>
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Remove item">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                                </svg>
+                                            </button>
                                         </form>
                                     </td>
                                 </tr>
                             @endif
                         @endforeach
                     </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="3" class="text-end"><strong>{{ __('Total') }}</strong></td> {{-- Adjusted colspan --}}
-                            <td class="text-end fw-bold h5">${{ number_format($cartTotal, 2) }}</td>
-                            <td></td>
-                        </tr>
-                    </tfoot>
                 </table>
+            </div>
+            <div class="card-footer bg-light py-2 px-3">
+                <div class="row justify-content-end align-items-center">
+                    <div class="col-md-auto">
+                        <span class="text-muted me-2">Total:</span>
+                        <span class="fs-5 fw-bold text-primary">${{ number_format($cartTotal, 2) }}</span>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="d-flex justify-content-between mt-4">
-            <a href="{{ route('home') }}" class="btn btn-outline-secondary">{{ __('Continue Shopping') }}</a>
-            {{-- <a href="#" class="btn btn-primary">{{ __('Proceed to Checkout') }}</a> --}} {{-- Placeholder for checkout --}}
+        <div class="row mt-4 mb-5 align-items-center">
+            <div class="col-md-6 mb-2 mb-md-0">
+                <a href="{{ route('home') }}" class="btn btn-outline-secondary btn-lg w-100 w-md-auto"> Continue Shopping</a>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <button type="button" class="btn btn-primary btn-lg w-100 w-md-auto">Proceed to Checkout </button>
+            </div>
         </div>
 
     @else
-        <div class="alert alert-info text-center" role="alert">
-            <h4 class="alert-heading">{{ __('Your cart is empty!') }}</h4>
-            <p>{{ __('Looks like you haven\'t added any products to your cart yet.') }}</p>
-            <hr>
-            <a href="{{ route('home') }}" class="btn btn-primary">{{ __('Browse Products') }}</a>
+        <div class="text-center py-5">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-cart-x mb-3 text-muted" viewBox="0 0 16 16">
+                <path d="M7.354 5.646a.5.5 0 1 0-.708.708L7.793 7.5 6.646 8.646a.5.5 0 1 0 .708.708L8.5 8.207l1.146 1.147a.5.5 0 1 0 .708-.708L9.207 7.5l1.147-1.146a.5.5 0 0 0-.708-.708L8.5 6.793 7.354 5.646z"/>
+                <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zm3.915 10L3.102 4h10.796l-1.313 7h-8.17zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+            </svg>
+            <h4>Your cart is empty.</h4>
+            <p class="text-muted">Looks like you haven't added anything to your cart yet.</p>
+            <a href="{{ route('home') }}" class="btn btn-primary mt-2">Start Shopping</a>
         </div>
     @endif
 </div>

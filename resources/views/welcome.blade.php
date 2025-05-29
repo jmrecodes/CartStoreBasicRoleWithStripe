@@ -12,15 +12,15 @@
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
                         </div>
-                    @endif
+        @endif
 
                     @if (Auth::check())
                         {{ __('You are logged in!') }}
                     @else
                         {{ __('You are a guest!') }}
-                    @endif
+            @endif
                 </div>
-            </div>
+                </div>
         </div>
     </div>
 </div>

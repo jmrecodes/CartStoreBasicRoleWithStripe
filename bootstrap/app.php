@@ -11,7 +11,17 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->alias([
+            'isAdmin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
+            'isOrdinary' => \App\Http\Middleware\EnsureUserIsOrdinary::class,
+        ]);
+        
+        // Other global middleware or groups can be configured here
+        // For example, if you had web group middleware to re-add:
+        // $middleware->web(append: [
+        //     \App\Http\Middleware\EncryptCookies::class,
+        //     // ... other web middleware
+        // ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

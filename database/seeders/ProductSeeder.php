@@ -95,6 +95,38 @@ class ProductSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'name' => 'Phone Case',
+                'description' => 'Phone case with a sleek design and a built-in wireless charger.',
+                'price' => 19.99,
+                'image_url' => 'https://placehold.co/600x400/EFEFEF/AAAAAA?text=Phone+Case',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Star Wars T-Shirt',
+                'description' => 'Star Wars T-Shirt with a sleek design and a built-in wireless charger.',
+                'price' => 19.99,
+                'image_url' => 'https://placehold.co/600x400/EFEFEF/AAAAAA?text=Star+Wars+T-Shirt',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Animated Fidget Spinner',
+                'description' => 'Animated fidget spinner with a sleek design and a built-in wireless charger.',
+                'price' => 19.99,
+                'image_url' => 'https://placehold.co/600x400/EFEFEF/AAAAAA?text=Animated+Fidget+Spinner',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Robot Vacuum Cleaner',
+                'description' => 'Robot vacuum cleaner with a sleek design and a built-in wireless charger.',
+                'price' => 19.99,
+                'image_url' => 'https://placehold.co/600x400/EFEFEF/AAAAAA?text=Robot+Vacuum+Cleaner',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],  
         ]);
     }
 }

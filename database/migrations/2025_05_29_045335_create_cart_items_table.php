@@ -20,7 +20,6 @@ return new class extends Migration
 
             $table->foreignId($cartForeignName)->constrained($cartTableName)->cascadeOnDelete();
             $table->morphs('itemable');
-            $table->unsignedInteger('quantity')->default(1);
             $table->json('options')->nullable();
 
             $table->timestamps();

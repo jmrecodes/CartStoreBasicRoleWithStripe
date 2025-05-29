@@ -12,9 +12,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::paginate(6); // Paginate with 6 products per page
+        $products = Product::latest()->paginate(8); // Show latest products first, paginated
         return view('products.index', compact('products'));
     }
-
-    // Other resourceful methods can be added here later if needed (create, store, show, edit, update, destroy)
 }
