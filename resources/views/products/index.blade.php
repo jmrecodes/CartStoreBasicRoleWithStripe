@@ -24,7 +24,7 @@
                         <p class="card-text text-muted small">{{ Str::limit($product->description, 100) }}</p>
                         <h6 class="card-subtitle mb-2 fw-bold">${{ number_format($product->price, 2) }}</h6>
                         <div class="mt-auto">
-                            <form action="#" method="POST"> {{-- Placeholder for add to cart --}}
+                            <form action="{{ route('cart.store') }}" method="POST">
                                 @csrf
                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
                                 <button type="submit" class="btn btn-primary w-100">{{ __('Add to Cart') }}</button>

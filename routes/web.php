@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,8 +34,12 @@ Route::post('/login', LoginController::class)->middleware('guest');
 // Logout Route
 Route::post('/logout', LogoutController::class)->name('logout')->middleware('auth');
 
+// Cart Routes
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index')->middleware('auth');
+Route::post('/cart/add', [CartController::class, 'store'])->name('cart.store')->middleware('auth');
+Route::delete('/cart/remove', [CartController::class, 'destroy'])->name('cart.remove')->middleware('auth');
+
 // Placeholder routes for links in app.blade.php - to be implemented later
-Route::get('/cart', function() { return 'Cart Page'; })->name('cart.index')->middleware('auth'); // Placeholder
 Route::get('/profile', [UserProfileController::class, 'show'])->name('profile.show')->middleware('auth');
 
 // Routes for editing profile
